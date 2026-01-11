@@ -11,11 +11,7 @@ export const metadata: Metadata = {
     description: "Gerenciamento de estoque varejo/atacado",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
-}>) {
+export default function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html lang="pt-br" suppressHydrationWarning>
         {/* 3. Aplicação da classe da fonte no body */}
