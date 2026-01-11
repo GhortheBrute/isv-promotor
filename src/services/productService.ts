@@ -5,7 +5,12 @@ import {getSuppliersMap} from "@/services/supplierService";
 
 const URL_API_PHP = 'http://localhost/api/produtos.php';
 
-export async function getProducts(): Promise<Product[]> {
+type ProductFilter = {
+    supplier?: string;
+    query?: string;
+}
+
+export async function getProducts(filters?: ProductFilter): Promise<Product[]> {
     // --- CENÁRIO FUTURO (Integração com PHP) ---
     /*
     try {
@@ -26,7 +31,7 @@ export async function getProducts(): Promise<Product[]> {
 
     const supplierMap = await getSuppliersMap();
 
-    const products: Product[] = dadosMock.map((item: any) => {
+    let products: Product[] = dadosMock.map((item: any) => {
         const supplierCode = String(item.fornecedor || item.supplier);
 
         const finalSupplierName = supplierMap[supplierCode] || supplierCode;
@@ -43,6 +48,18 @@ export async function getProducts(): Promise<Product[]> {
             dataStamp: item.dataStamp
         };
     });
+
+    if (filters?.supplier) {
+        const termSupplier = filters.supplier.toLowerCase();
+        products = products.filter(p => p.supplier.toLowerCase().includes(termSupplier));
+    }
+
+    if (filters?.query) {
+        const termQuery = filters.query.toLowerCase();
+        products = products.filter(p =>
+            p.description.toLowerCase().includes(termQuery) ||
+            p.sector.toLowerCase().includes(termQuery));
+    }
 
     return products;
 }

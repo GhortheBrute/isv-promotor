@@ -1,1 +1,22 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Configuração de Impressão */
+@media print {
+    @page {
+        size: landscape; /* Força Paisagem */
+        margin: 1cm;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact; /* Tenta manter cores de fundo */
+        background: white !important; /* Sempre imprime fundo branco */
+        color: black !important; /* Sempre texto preto */
+    }
+
+    /* Classes úteis para esconder coisas na impressão */
+    .no-print {
+        display: none !important;
+    }
+}
