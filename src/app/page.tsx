@@ -30,7 +30,7 @@ export default async function Home(props: PageProps) {
             {/* Cabeçalho Flexível */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white uppercase">
-                    Dashboard de Estoque
+                    ISV Promotor
                 </h1>
 
                 {/* Ações (Imprimir, Baixar, Tema) */}
@@ -42,7 +42,7 @@ export default async function Home(props: PageProps) {
                 <SearchFilters suppliersList={uniqueSuppliers} />
             </div>
 
-            <div className="mb-2 text-sm text-gray-600 dark:text-gray-400 uppercase flex justify-between items-center">
+            <div className="mb-2 text-sm text-gray-600 dark:text-gray-400 uppercase flex justify-between items-center print:hidden">
                 <span>Resultados encontrados: <span className="font-bold text-black dark:text-white">{products.length}</span></span>
             </div>
 

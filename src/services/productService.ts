@@ -3,7 +3,7 @@ import dadosMock from '@/data/products.json';
 import { Product } from "@/types";
 import {getSuppliersMap} from "@/services/supplierService";
 
-const URL_API_PHP = 'http://localhost/api/produtos.php';
+const URL_API_PHP = 'http://localhost:8000/produtos.php';
 
 type ProductFilter = {
     supplier?: string;
@@ -11,23 +11,26 @@ type ProductFilter = {
 }
 
 export async function getProducts(filters?: ProductFilter): Promise<Product[]> {
-    // --- CENÁRIO FUTURO (Integração com PHP) ---
-    /*
-    try {
-      // O 'no-store' garante que o Next.js não faça cache e sempre pegue dados frescos do PHP
-      const response = await fetch(URL_API_PHP, { cache: 'no-store' });
+    let rawData: any[] = [];
 
-      if (!response.ok) {
-        throw new Error('Falha ao buscar dados do PHP');
-      }
+    try{
+        // 'no-store': Garante que sempre busca dados novos no banco
+        const res = await fetch(URL_API_PHP, {cache: 'no-store'});
 
-      const dados: Produto[] = await response.json();
-      return dados;
+        if (!res.ok) {
+            throw new Error(`Erro HTTP: ${res.status}`);
+        }
+
+        rawData = await res.json();
+
+        // Se o PHP retornar erro em JSON (conxeão falhou)
+        if ((rawData as any).erro) {
+            console.error("Erro PHP:", (rawData as any).erro);
+            return [];
+        }
     } catch (error) {
-      console.error("Erro na API PHP:", error);
-      return []; // Retorna lista vazia em caso de erro para não quebrar a tela
+        console.error("Falha ao conectar na API PHP. Verifique se o XAMPP está rodando corretamente.");
     }
-    */
 
     const supplierMap = await getSuppliersMap();
 
