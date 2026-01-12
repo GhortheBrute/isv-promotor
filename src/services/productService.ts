@@ -3,7 +3,7 @@ import dadosMock from '@/data/products.json';
 import { Product } from "@/types";
 import {getSuppliersMap} from "@/services/supplierService";
 
-const URL_API_PHP = 'http://localhost:8000/produtos.php';
+const URL_API_PHP = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/produtos.php';
 
 type ProductFilter = {
     supplier?: string;
@@ -34,7 +34,7 @@ export async function getProducts(filters?: ProductFilter): Promise<Product[]> {
 
     const supplierMap = await getSuppliersMap();
 
-    let products: Product[] = dadosMock.map((item: any) => {
+    let products: Product[] = rawData.map((item: any) => {
         const supplierCode = String(item.fornecedor || item.supplier);
 
         const finalSupplierName = supplierMap[supplierCode] || supplierCode;

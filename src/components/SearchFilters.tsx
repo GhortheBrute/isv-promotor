@@ -5,10 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 interface SearchProps {
     suppliersList: string[];
+    onFilterChange: (supplier: string, query: string) => void;
 }
 
-export default function SearchFilters({ suppliersList }: SearchProps) {
-    const router = useRouter();
+export default function SearchFilters({ suppliersList, onFilterChange }: SearchProps) {
     const searchParams = useSearchParams();
 
     const [supplierInput, setSupplierInput] = useState('');
@@ -43,21 +43,32 @@ export default function SearchFilters({ suppliersList }: SearchProps) {
     };
 
     const handleSearch = (supplierOverride?: string) => {
-        const params = new URLSearchParams();
         // Verifica se supplierOverride é string válida, senão usa o input
         const currentSupplier = typeof supplierOverride === 'string' ? supplierOverride : supplierInput;
 
-        if (currentSupplier) params.set('supplier', currentSupplier);
-        if (genericSearch) params.set('query', genericSearch);
+        // ---MODO CLIENTE---
+        if (onFilterChange) {
+            // Filtra os dados na hora
+            onFilterChange(currentSupplier, genericSearch);
 
-        router.push(`/?${params.toString()}`);
+            // Atualiza a URL silenciosamente
+            const params = new URLSearchParams();
+            if (currentSupplier) params.set('supplier', currentSupplier);
+            if (genericSearch) params.set('query', genericSearch);
+            window.history.replaceState(null, '',`${params.toString()}`);
+            return;
+        }
     };
 
     const handleClear = () => {
         setSupplierInput('');
         setGenericSearch('');
         setShowMoreFilters(false);
-        router.push('/');
+
+        if (onFilterChange) {
+            onFilterChange('','');
+            window.history.replaceState(null, '', window.location.pathname);
+        }
     };
 
     return (

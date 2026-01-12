@@ -7,7 +7,7 @@ import { Providers } from "@/components/Providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Dashboard de Estoque",
+    title: "ISV Promotor",
     description: "Gerenciamento de estoque varejo/atacado",
 };
 
