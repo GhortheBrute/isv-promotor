@@ -1,9 +1,8 @@
-import dadosMock from '@/data/products.json';
-
 import { Product } from "@/types";
 import {getSuppliersMap} from "@/services/supplierService";
 
 const URL_API_PHP = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/produtos.php';
+
 
 type ProductFilter = {
     supplier?: string;
@@ -16,6 +15,7 @@ export async function getProducts(filters?: ProductFilter): Promise<Product[]> {
     try{
         // 'no-store': Garante que sempre busca dados novos no banco
         const res = await fetch(URL_API_PHP, {cache: 'no-store'});
+        console.log(res)
 
         if (!res.ok) {
             throw new Error(`Erro HTTP: ${res.status}`);
@@ -23,7 +23,7 @@ export async function getProducts(filters?: ProductFilter): Promise<Product[]> {
 
         rawData = await res.json();
 
-        // Se o PHP retornar erro em JSON (conxeão falhou)
+        // Se o PHP retornar erro em JSON (conexão falhou)
         if ((rawData as any).erro) {
             console.error("Erro PHP:", (rawData as any).erro);
             return [];

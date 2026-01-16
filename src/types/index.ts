@@ -1,7 +1,7 @@
 // src/types/index.ts
 
 export interface Product {
-    sku: number;
+    sku: string;
     description: string;
     packaging: string;
     supplier: string;

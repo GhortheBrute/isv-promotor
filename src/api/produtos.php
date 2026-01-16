@@ -76,22 +76,23 @@ try {
 //      Production SQL
      $sql = "
          SELECT
-             TRIM(s13.MERC) AS sku,
-             TRIM(s13.DESCRICAO) AS description,
-             TRIM(s13.EMBALAGEM) AS packaging,
-             TRIM(s12.FORNECEDOR) AS supplier,
-             TRIM(s13.ESTOQ_EMB1) AS emb1,
-             TRIM(s13.ESTOQ_EMB9) AS emb9,
-             TRIM(s13.IDADE) AS age,
-             TRIM(s13.NAO_VENDE) AS missSale,
-             TRIM(s12.GRUPO) AS sector,
+             s13.MERC AS sku,
+             s13.DESCRICAO AS description,
+             s13.EMBALAGEM AS packaging,
+             s12.FORNECEDOR AS supplier,
+             s13.ESTOQ_EMB1 AS emb1,
+             s13.ESTOQ_EMB9 AS emb9,
+             s13.IDADE AS age,
+             s13.NAO_VENDE AS missSale,
+             s12.GRUPO AS sector,
              s12.DATA_GERACAO AS dataStamp
          FROM smg13 s13
-         LEFT JOIN smgoi12 s12 ON TRIM(s13.MERC) = TRIM(s12.MERC)
+         LEFT JOIN smgoi12 s12 ON s13.MERC = s12.MERC
          WHERE
              s13.NAO_VENDE > 1 AND
              s13.ESTOQ_EMB1 > 1 AND
-             s12.FORNECEDOR IS NOT NULL
+             s12.FORNECEDOR IS NOT NULL AND
+             s12.FORNECEDOR !== ''
      ";
 
         $stmt = $pdo->prepare($sql);
