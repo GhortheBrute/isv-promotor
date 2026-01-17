@@ -4,37 +4,22 @@
 
 /* Configuração de Impressão "Nuclear" */
 @media print {
-    /* Força o navegador a entender que é uma impressão P&B/Clara */
-    :root {
-        color-scheme: light;
-    }
-
     @page {
-        size: landscape;
-        margin: 0.5cm;
+        size: landscape; /* Força orientação paisagem */
+        margin: 5mm;     /* Margem mínima para caber mais coisa */
     }
 
-    /* Reseta cores de fundo e texto de TODOS os elementos */
-    *, *::before, *::after {
-        background-color: transparent !important;
-        color: black !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
+    * {
+        background-color: white;
     }
 
-    /* Garante fundo branco no papel */
-    html, body {
-        background-color: white !important;
-        -webkit-print-color-adjust: exact;
+    body {
+        -webkit-print-color-adjust: exact; /* Garante que cores de fundo (zebra) saiam na impressão */
+        print-color-adjust: exact;
+        background-color: white;
     }
 
-    /* Mantém as bordas da tabela visíveis, mas finas e cinzas */
-    table, tr, td, th {
-        border-color: #d1d5db !important; /* gray-300 */
-        border-width: 1px !important;
-    }
-
-    /* Esconde elementos de navegação */
+    /* Esconde elementos inúteis na impressão */
     .no-print {
         display: none !important;
     }

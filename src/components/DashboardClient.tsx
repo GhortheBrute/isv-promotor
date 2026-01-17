@@ -32,6 +32,7 @@ export default function DashboardClient() {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({
         key: 'description',
         direction: 'asc'
@@ -39,6 +40,7 @@ export default function DashboardClient() {
 
     const searchParams = useSearchParams();
     const initialFiltersApplied = useRef(false);
+    const [itemsPerPage, setItemsPerPage] = useState(100);
 
     // Função para mudar a ordenação
     const handleSort = (key: keyof Product) => {
@@ -70,15 +72,18 @@ export default function DashboardClient() {
             const aString = String(aValue).toLowerCase();
             const bString = String(bValue).toLowerCase();
 
-            if (sortConfig.direction === 'asc') {
-                return aString.localeCompare(bString);
-            } else{
-                return bString.localeCompare(aString);
-            }
+            return sortConfig.direction === 'asc' ? aString.localeCompare(bString) : bString.localeCompare(aString);
         });
-
         return sorted;
     }, [filteredProducts, sortConfig]);
+
+    // Paginação dos dados
+    const paginatedProducts = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+    }, [sortedProducts, currentPage]);
+
+    const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
 
     //Lista de fornecedores únicos (memoizado)
     const uniqueSuppliers = useMemo(() => {
@@ -99,10 +104,16 @@ export default function DashboardClient() {
                     p.description.toLowerCase().includes(query.toLowerCase()) ||
                     p.sector.toLowerCase().includes(query.toLowerCase())
             );
-        };
+        }
 
         setFilteredProducts(result);
+        setCurrentPage(1); // Reseta a página ao filtrar
     }, [products]);
+
+    const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setItemsPerPage(Number(e.target.value));
+        setCurrentPage(1); // Volta para a primeira página para não quebrar o visual
+    };
     
     const getLastUpdateDate = () => {
         const rawDate = products[0]?.dataStamp;
@@ -126,7 +137,7 @@ export default function DashboardClient() {
                 // Dispara as duas requisições em paralelo
                 const [resProducts, resSuppliers] = await Promise.all([
                     fetch(apiUrl),
-                    fetch('files/suppliers.csv')
+                    fetch('/files/suppliers.csv')
                 ]);
 
                 if (!apiUrl) throw new Error("URL da API não configurada.");
@@ -188,15 +199,15 @@ export default function DashboardClient() {
     }, []);
 
     // Reaplica filtros da URL quando os produtos carregarem
-        useEffect(() => {
-            if(!loading && products.length > 0) {
-                const urlSupplier = searchParams.get('supplier') || '';
-                const urlQuery = searchParams.get('query') || '';
-                if (urlSupplier || urlQuery) {
-                    handleFilterChange(urlSupplier, urlQuery);
-                }
+    useEffect(() => {
+        if(!loading && products.length > 0 && !initialFiltersApplied.current) {
+            const urlSupplier = searchParams.get('supplier') || '';
+            const urlQuery = searchParams.get('query') || '';
+            if (urlSupplier || urlQuery) {
+                handleFilterChange(urlSupplier, urlQuery);
             }
-        }, [loading, searchParams, products, handleFilterChange]);
+        }
+    }, [loading, searchParams, products]);
 
 
     if (error) {
@@ -224,15 +235,56 @@ export default function DashboardClient() {
         </div>
       </div>
 
-      <div className="mb-2 text-sm text-gray-600 dark:text-gray-400 uppercase flex justify-between items-center">
-          <span>Resultados encontrados: <span className="font-bold text-black dark:text-white">{filteredProducts.length}</span></span>
-          <span className="text-xs text-gray-500 dark:text-gray-400 italic">
-              Atualizado em: <span className="font-medium text-gray-700 dark:text-gray-300">{loading ? 'Verificando...' : getLastUpdateDate()}</span>
-          </span>
-      </div>
+        <div className="mb-2 text-sm text-gray-600 dark:text-gray-400 uppercase flex flex-col md:flex-row justify-between items-end gap-2 no-print">
+            <div className="flex gap-4 items-center">
+                <span>Encontrados: <span className="font-bold text-black dark:text-white">{sortedProducts.length}</span></span>
+
+                {/* SELETOR DE LINHAS POR PÁGINA */}
+                <div className="flex items-center gap-2">
+                    <label htmlFor="rows" className="text-xs font-bold">Exibir:</label>
+                    <select
+                        id="rows"
+                        value={itemsPerPage}
+                        onChange={handleItemsPerPageChange}
+                        className="border rounded p-1 text-xs bg-white dark:bg-gray-700 text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                        <option value={200}>200</option>
+                    </select>
+                </div>
+
+                <span>Atualizado em: <span>{loading ? 'Verificando...' : getLastUpdateDate()}</span></span>
+            </div>
+
+            <div className="flex items-center gap-2">
+                <span>Página <span className="font-bold text-black dark:text-white">{currentPage}</span> de {totalPages || 1}</span>
+
+                {/* Botões de Paginação */}
+                {totalPages > 1 && (
+                    <div className="flex gap-1">
+                        <button
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="px-3 py-1 bg-gray-200 rounded text-xs font-bold disabled:opacity-50 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+                        >
+                            ANTERIOR
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="px-3 py-1 bg-gray-200 rounded text-xs font-bold disabled:opacity-50 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+                        >
+                            PRÓXIMA
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
 
       <ProductsTable
-            products={sortedProducts}
+            products={paginatedProducts}
             isLoading={loading}
             onSort={handleSort}
             sortConfig={sortConfig}

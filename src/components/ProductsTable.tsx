@@ -23,7 +23,7 @@ const SortableHeader = ({ label, columnKey, sortConfig, onSort, center = false }
     return (
     <th 
         scope="col" 
-        className={`px-3 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors select-none ${center ? 'text-center' : 'text-left'}`}
+        className={`px-3 py-3 print:px-1 print:py-1 print:text-[10px] cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors select-none ${center ? 'text-center' : 'text-left'}`}
         onClick={() => onSort(columnKey)}
         title="Clique para ordenar"
     >
@@ -42,10 +42,7 @@ const SortableHeader = ({ label, columnKey, sortConfig, onSort, center = false }
     );
 };
 
-export default async function ProductsTable({products, isLoading, onSort, sortConfig}: PropsTable){
-
-    
-
+export default function ProductsTable({products, isLoading, onSort, sortConfig}: PropsTable){
     return (
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left uppercase text-gray-500 dark:text-gray-400">
@@ -63,7 +60,7 @@ export default async function ProductsTable({products, isLoading, onSort, sortCo
                     <SortableHeader label="Setor" columnKey="sector" center sortConfig={sortConfig} onSort={onSort}/>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody className="print:text-[10px] print:leading-none">
                     {/* Cenário 1 - Carregando */}
                     {isLoading ? (
                         <tr>
@@ -86,16 +83,16 @@ export default async function ProductsTable({products, isLoading, onSort, sortCo
                     ) : (
                         /* --- CENÁRIO 3: LISTA DE PRODUTOS --- */
                         products.map((product) => (
-                            <tr key={product.sku} className="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors">
-                                <td className="px-3 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{product.sku}</td>
-                                <td className="px-3 py-2">{product.description}</td>
-                                <td className="px-3 py-2">{product.packaging}</td>
-                                <td className="px-3 py-2" title={product.supplier}>{product.supplier}</td>
-                                <td className="px-3 py-2 text-center font-bold text-blue-600 dark:text-blue-400">{product.emb1.toLocaleString('pt-BR', {maximumFractionDigits: 0})}</td>
-                                <td className="px-3 py-2 text-center font-bold text-green-600 dark:text-green-400">{product.emb9.toLocaleString('pt-BR', {maximumFractionDigits: 0})}</td>
-                                <td className="px-3 py-2 text-center">{Math.floor(product.age)}</td>
-                                <td className="px-3 py-2 text-center text-red-600 font-medium">{Math.floor(product.missSale)}</td>
-                                <td className="px-3 py-2 text-xs">{product.sector}</td>
+                            <tr key={product.sku} className="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors print:border-gray-300 print:text-black">
+                                <td className="px-3 py-2 print:px-1 print:py-0.5 font-medium text-gray-900 whitespace-nowrap dark:text-white print:text-black">{product.sku}</td>
+                                <td className="px-3 py-2 print:px-1 print:py-0.5 print:text-black">{product.description}</td>
+                                <td className="px-3 py-2 print:px-1 print:py-0.5 print:text-black">{product.packaging}</td>
+                                <td className="px-3 py-2 print:max-w-none print:px-1 print:py-0.5 print:text-black" title={product.supplier}>{product.supplier}</td>
+                                <td className="px-3 py-2 text-center font-bold text-blue-600 dark:text-blue-400 print:text-black print:px-1 print:py-0.5">{product.emb1.toLocaleString('pt-BR', {maximumFractionDigits: 0})}</td>
+                                <td className="px-3 py-2 text-center font-bold text-green-600 dark:text-green-400 print:text-black print:px-1 print:py-0.5">{product.emb9.toLocaleString('pt-BR', {maximumFractionDigits: 0})}</td>
+                                <td className="px-3 py-2 text-center print:text-black print:px-1 print:py-0.5">{Math.floor(product.age)}</td>
+                                <td className="px-3 py-2 text-center text-red-600 font-medium print:text-black print:px-1 print:py-0.5">{Math.floor(product.missSale)}</td>
+                                <td className="px-3 py-2 text-xs print:text-[9px] print:px-1 print:py-0.5 print:text-black">{product.sector}</td>
                             </tr>
                         ))
                     )}
