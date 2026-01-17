@@ -147,14 +147,6 @@ export default function DashboardClient() {
             }
         }, [loading, searchParams, products, handleFilterChange]);
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-64 text-gray-500 animate-pulse">
-                <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb4"></div>
-                <p>Carregando estoque atualizado...</p>
-            </div>
-        );
-    }
 
     if (error) {
         return <div className="text-red-600 text-center, p-8">{error}</div>
@@ -164,26 +156,31 @@ export default function DashboardClient() {
     <div className="animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white uppercase">
-            Dashboard de Estoque
+            ISV Promotor
         </h1>
-        <HeaderActions data={filteredProducts} />
+        {/* Desabilita ações enquanto carrega para evitar cliques falsos */}
+        <div className={loading ? 'opacity-50 pointer-events-none' : ''}>
+            <HeaderActions data={filteredProducts} />
+        </div>
       </div>
 
       <div className="no-print">
-        <SearchFilters 
+        <div className={loading ? 'opacity-70 pointer-events-none grayscale' : ''}>
+          <SearchFilters 
             suppliersList={uniqueSuppliers} 
             onFilterChange={handleFilterChange} 
-        />
+        />  
+        </div>
       </div>
 
       <div className="mb-2 text-sm text-gray-600 dark:text-gray-400 uppercase flex justify-between items-center">
           <span>Resultados encontrados: <span className="font-bold text-black dark:text-white">{filteredProducts.length}</span></span>
           <span className="text-xs text-gray-500 dark:text-gray-400 italic">
-              Atualizado em: <span className="font-medium text-gray-700 dark:text-gray-300">{getLastUpdateDate()}</span>
+              Atualizado em: <span className="font-medium text-gray-700 dark:text-gray-300">{loading ? 'Verificando...' : getLastUpdateDate()}</span>
           </span>
       </div>
 
-      <ProductsTable products={filteredProducts}/>
+      <ProductsTable products={filteredProducts} isLoading={loading}/>
     </div>
   );
 }
