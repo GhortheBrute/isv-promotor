@@ -1,25 +1,66 @@
 import {Product} from "@/types";
+import { SortConfig } from "./DashboardClient";
 
 interface PropsTable {
     products: Product[];
     isLoading: boolean;
+    onSort: (key: keyof Product) => void;
+    sortConfig: SortConfig;
 }
 
-export default async function ProductsTable({products, isLoading}: PropsTable){
+interface SortableHeaderProps {
+    label: string;
+    columnKey: keyof Product;
+    sortConfig: SortConfig;
+    onSort: (key: keyof Product) => void;
+    center?: boolean;
+}
+
+const SortableHeader = ({ label, columnKey, sortConfig, onSort, center = false }: SortableHeaderProps) => {
+    const isActive = sortConfig.key === columnKey;
+    const direction = sortConfig.direction;
+
+    return (
+    <th 
+        scope="col" 
+        className={`px-3 py-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors select-none ${center ? 'text-center' : 'text-left'}`}
+        onClick={() => onSort(columnKey)}
+        title="Clique para ordenar"
+    >
+        <div className={`flex items-center gap-1 ${center ? 'justify-center' : 'justify-start'}`}>
+        {label}
+        <span className="text-gray-500 text-[10px] w-3 flex justify-center">
+            {isActive ? (
+                direction === 'asc' ? '▲' : '▼'
+            ) : (
+                // Ícone fantasma para manter alinhamento
+                <span className="opacity-0">▼</span> 
+            )}
+        </span>
+        </div>
+    </th>
+    );
+};
+
+export default async function ProductsTable({products, isLoading, onSort, sortConfig}: PropsTable){
+
+    
+
     return (
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left uppercase text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200">
                 <tr>
-                    <th className="px-4 py-3 text-center">Código</th>
-                    <th className="px-4 py-3 text-center">Descrição</th>
-                    <th className="px-4 py-3 text-center">Embalagem</th>
-                    <th className="px-4 py-3 text-center">Fornecedor</th>
-                    <th className="px-4 py-3 text-center">Emb1</th>
-                    <th className="px-4 py-3 text-center">Emb9</th>
-                    <th className="px-4 py-3 text-center">Idade</th>
-                    <th className="px-4 py-3 text-center">Sem Venda</th>
-                    <th className="px-4 py-3 text-center">Grupo</th>
+                    <SortableHeader label="Código" columnKey="sku" center sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Descrição" columnKey="description" sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Embalagem" columnKey="packaging" center sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Fornecedor" columnKey="supplier" sortConfig={sortConfig} onSort={onSort}/>
+                    
+                    <SortableHeader label="Emb 1" columnKey="emb1" center sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Emb 9" columnKey="emb9" center sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Idade" columnKey="age" center sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Sem Venda" columnKey="missSale" center sortConfig={sortConfig} onSort={onSort}/>
+                    <SortableHeader label="Setor" columnKey="sector" center sortConfig={sortConfig} onSort={onSort}/>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,7 +90,7 @@ export default async function ProductsTable({products, isLoading}: PropsTable){
                                 <td className="px-3 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{product.sku}</td>
                                 <td className="px-3 py-2">{product.description}</td>
                                 <td className="px-3 py-2">{product.packaging}</td>
-                                <td className="px-3 py-2 truncate max-w-[150px]" title={product.supplier}>{product.supplier}</td>
+                                <td className="px-3 py-2" title={product.supplier}>{product.supplier}</td>
                                 <td className="px-3 py-2 text-center font-bold text-blue-600 dark:text-blue-400">{product.emb1.toLocaleString('pt-BR', {maximumFractionDigits: 0})}</td>
                                 <td className="px-3 py-2 text-center font-bold text-green-600 dark:text-green-400">{product.emb9.toLocaleString('pt-BR', {maximumFractionDigits: 0})}</td>
                                 <td className="px-3 py-2 text-center">{Math.floor(product.age)}</td>

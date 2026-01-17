@@ -55,45 +55,45 @@ try {
         echo json_encode($cacheData);
     } else {
         // Cache expirado
-//        $sql = "
-//            SELECT
-//                s13.sku AS sku,
-//                s13.description AS description,
-//                s13.packaging AS packaging,
-//                s13.supplier AS supplier,
-//                s13.emb1 AS emb1,
-//                s13.emb9 AS emb9,
-//                s13.age AS age,
-//                s13.missSale AS missSale,
-//                s13.sector AS sector,
-//                s13.dataStamp AS dataStamp
-//            FROM MOCK_DATA s13
-//            WHERE
-//                s13.missSale > 1 AND
-//                s13.emb1 > 1 AND
-//                s13.supplier IS NOT NULL
-//        ";
-//      Production SQL
-     $sql = "
-         SELECT
-             s13.MERC AS sku,
-             s13.DESCRICAO AS description,
-             s13.EMBALAGEM AS packaging,
-             s12.FORNECEDOR AS supplier,
-             s13.ESTOQ_EMB1 AS emb1,
-             s13.ESTOQ_EMB9 AS emb9,
-             s13.IDADE AS age,
-             s13.NAO_VENDE AS missSale,
-             s12.GRUPO AS sector,
-             s12.DATA_GERACAO AS dataStamp
-         FROM smg13 s13
-         LEFT JOIN smgoi12 s12 ON s13.MERC = s12.MERC
-         WHERE
-             s13.NAO_VENDE > 1 AND
-             s13.ESTOQ_EMB1 > 1 AND
-             s12.FORNECEDOR IS NOT NULL AND
-             s12.FORNECEDOR !== ''
-     ";
+       $sql = "
+           SELECT
+               s13.sku AS sku,
+               s13.description AS description,
+               s13.packaging AS packaging,
+               s13.supplier AS supplier,
+               s13.emb1 AS emb1,
+               s13.emb9 AS emb9,
+               s13.age AS age,
+               s13.missSale AS missSale,
+               s13.sector AS sector,
+               s13.dataStamp AS dataStamp
+           FROM MOCK_DATA s13
+           WHERE
+               s13.missSale > 1 AND
+               s13.emb1 > 1 AND
+               s13.supplier IS NOT NULL
+       ";
+    // Production SQL
+    //  $sql = "
+    //      SELECT
+    //          s13.MERC AS sku,
+    //          s13.DESCRICAO AS description,
+    //          s13.EMBALAGEM AS packaging,
+    //          s12.FORNECEDOR AS supplier,
+    //          s13.ESTOQ_EMB1 AS emb1,
+    //          s13.ESTOQ_EMB9 AS emb9,
+    //          s13.IDADE AS age,
+    //          s13.NAO_VENDE AS missSale,
+    //          s12.GRUPO AS sector,
+    //          s12.DATA_GERACAO AS dataStamp
+    //      FROM smg13 s13
+    //      LEFT JOIN smgoi12 s12 ON s13.MERC = s12.MERC
+    //      WHERE
+    //          s13.NAO_VENDE > 1 AND
+    //          s13.ESTOQ_EMB1 > 1 AND
+    //          s12.FORNECEDOR IS NOT NULL AND
+    //          s12.FORNECEDOR !== ''
+    //  ";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute();

@@ -6,6 +6,7 @@ import ProductsTable from './ProductsTable';
 import SearchFilters from './SearchFilters';
 import HeaderActions from './HeaderActions';
 import { useSearchParams } from 'next/navigation';
+import { Asap_Condensed } from 'next/font/google';
 
 interface ApiProductRaw {
     sku: string;
@@ -20,14 +21,64 @@ interface ApiProductRaw {
     dataStamp: string;
 }
 
+export type SortDirection = 'asc' | 'desc';
+export type SortConfig = {
+    key: keyof Product;
+    direction: SortDirection;
+}
+
 
 export default function DashboardClient() {
     const [products, setProducts] = useState<Product[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [sortConfig, setSortConfig] = useState<SortConfig>({
+        key: 'description',
+        direction: 'asc'
+    });
 
     const searchParams = useSearchParams();
+
+    // Função para mudar a ordenação
+    const handleSort = (key: keyof Product) => {
+        setSortConfig((current) => {
+            // Se clicar na mesma coluna, inverte a direção
+            if (current.key === key) {
+                return {key, direction: current.direction === 'asc' ? 'desc' : 'asc'}
+            }
+            // Se clicar em uma coluna nova, começa ascendente
+            return {key, direction: 'asc' };
+        });
+    };
+
+    // Aplica a ordenação na lista filtrada
+    const sortedProducts = useMemo(() => {
+        // Cria uma cópia para não mutar o estado original
+        const sorted = [...filteredProducts];
+
+        sorted.sort((a, b) => {
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            // Lógica para números (subtração)
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+            }
+
+            // Lógica para strings (localeCompare para acentuação)
+            const aString = String(aValue).toLowerCase();
+            const bString = String(bValue).toLowerCase();
+
+            if (sortConfig.direction === 'asc') {
+                return aString.localeCompare(bString);
+            } else{
+                return bString.localeCompare(aString);
+            }
+        });
+
+        return sorted;
+    }, [filteredProducts, sortConfig]);
 
     //Lista de fornecedores únicos (memoizado)
     const uniqueSuppliers = useMemo(() => {
@@ -180,7 +231,12 @@ export default function DashboardClient() {
           </span>
       </div>
 
-      <ProductsTable products={filteredProducts} isLoading={loading}/>
+      <ProductsTable
+            products={sortedProducts}
+            isLoading={loading}
+            onSort={handleSort}
+            sortConfig={sortConfig}
+        />
     </div>
   );
 }
