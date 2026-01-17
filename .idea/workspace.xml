@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ea7825da-d78e-4379-9be1-88e550e6f703" name="Changes" comment="Interface corrigida. Implementando conexão com DB.">
+    <list default="true" id="ea7825da-d78e-4379-9be1-88e550e6f703" name="Changes" comment="Piscada corrigida. Implementado paginação de dados e seus controles.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DashboardClient.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DashboardClient.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ProductsTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProductsTable.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -160,8 +160,17 @@
       <workItem from="1768171699579" duration="741000" />
       <workItem from="1768243750795" duration="104000" />
       <workItem from="1768617502052" duration="917000" />
-      <workItem from="1768618513668" duration="2832000" />
+      <workItem from="1768618513668" duration="4027000" />
     </task>
+    <task id="LOCAL-00001" summary="Piscada corrigida. Implementado paginação de dados e seus controles.">
+      <option name="closed" value="true" />
+      <created>1768621616090</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1768621616090</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,6 +191,7 @@
     <MESSAGE value="Interface broken." />
     <MESSAGE value="Interface broken[2]" />
     <MESSAGE value="Interface corrigida. Implementando conexão com DB." />
-    <option name="LAST_COMMIT_MESSAGE" value="Interface corrigida. Implementando conexão com DB." />
+    <MESSAGE value="Piscada corrigida. Implementado paginação de dados e seus controles." />
+    <option name="LAST_COMMIT_MESSAGE" value="Piscada corrigida. Implementado paginação de dados e seus controles." />
   </component>
 </project>

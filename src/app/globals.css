@@ -5,21 +5,42 @@
 /* Configuração de Impressão "Nuclear" */
 @media print {
     @page {
-        size: landscape; /* Força orientação paisagem */
-        margin: 5mm;     /* Margem mínima para caber mais coisa */
+        size: landscape;
+        margin: 5mm;
+        background-color: white;
+        color: black;
     }
 
     * {
-        background-color: white;
+        background: white !important;
+        color: black !important;
     }
 
     body {
-        -webkit-print-color-adjust: exact; /* Garante que cores de fundo (zebra) saiam na impressão */
+        -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact;
-        background-color: white;
+        background-color: white !important;
+        color: black !important;
     }
 
-    /* Esconde elementos inúteis na impressão */
+    /* FORÇA BRUTA: Se o Tailwind falhar, isso garante legibilidade */
+    table, th, td {
+        color: black !important;
+        border-color: #d1d5db !important; /* cinza claro */
+    }
+
+    /* Mantém as cores funcionais (Vermelho de erro, Azul de estoque),
+       mas escurece um pouco para ficar legível no papel */
+    .text-red-600, .text-red-500, .dark\:text-red-400 {
+        color: black !important; /* Vermelho escuro */
+    }
+    .text-blue-600, .dark\:text-blue-400 {
+        color: black !important; /* Azul escuro */
+    }
+    .text-green-600, .dark\:text-green-400 {
+        color: black !important; /* Verde escuro */
+    }
+
     .no-print {
         display: none !important;
     }

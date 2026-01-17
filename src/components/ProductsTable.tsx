@@ -23,7 +23,7 @@ const SortableHeader = ({ label, columnKey, sortConfig, onSort, center = false }
     return (
     <th 
         scope="col" 
-        className={`px-3 py-3 print:px-1 print:py-1 print:text-[10px] cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors select-none ${center ? 'text-center' : 'text-left'}`}
+        className={`px-3 py-3 print:px-1 print:py-1 print:text-[10px] print:text-black cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors select-none ${center ? 'text-center' : 'text-left'}`}
         onClick={() => onSort(columnKey)}
         title="Clique para ordenar"
     >
@@ -45,8 +45,8 @@ const SortableHeader = ({ label, columnKey, sortConfig, onSort, center = false }
 export default function ProductsTable({products, isLoading, onSort, sortConfig}: PropsTable){
     return (
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left uppercase text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200">
+            <table className="w-full text-sm text-left uppercase text-gray-500 dark:text-gray-400 print:text-black">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 print:text-white print:bg-black">
                 <tr>
                     <SortableHeader label="Código" columnKey="sku" center sortConfig={sortConfig} onSort={onSort}/>
                     <SortableHeader label="Descrição" columnKey="description" sortConfig={sortConfig} onSort={onSort}/>
@@ -82,8 +82,11 @@ export default function ProductsTable({products, isLoading, onSort, sortConfig}:
                         </tr>
                     ) : (
                         /* --- CENÁRIO 3: LISTA DE PRODUTOS --- */
-                        products.map((product) => (
-                            <tr key={product.sku} className="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors print:border-gray-300 print:text-black">
+                        products.map((product, index) => (
+                            <tr key={product.sku}
+                                className={`bg - white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors
+                                        ${index % 2 === 0 ? "print:bg-white" : "print:bg-gray-50"}
+                                        print:border-gray-300 print:text-black print:justify-center`}>
                                 <td className="px-3 py-2 print:px-1 print:py-0.5 font-medium text-gray-900 whitespace-nowrap dark:text-white print:text-black">{product.sku}</td>
                                 <td className="px-3 py-2 print:px-1 print:py-0.5 print:text-black">{product.description}</td>
                                 <td className="px-3 py-2 print:px-1 print:py-0.5 print:text-black">{product.packaging}</td>
