@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Product } from '@/types';
 import ProductsTable from './ProductsTable';
 import SearchFilters from './SearchFilters';
 import HeaderActions from './HeaderActions';
 import { useSearchParams } from 'next/navigation';
-import { Asap_Condensed } from 'next/font/google';
 
 interface ApiProductRaw {
     sku: string;
@@ -39,6 +38,7 @@ export default function DashboardClient() {
     });
 
     const searchParams = useSearchParams();
+    const initialFiltersApplied = useRef(false);
 
     // Função para mudar a ordenação
     const handleSort = (key: keyof Product) => {
@@ -204,7 +204,7 @@ export default function DashboardClient() {
     }
 
     return (
-    <div className="animate-in fade-in duration-500">
+    <div>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white uppercase">
             ISV Promotor
