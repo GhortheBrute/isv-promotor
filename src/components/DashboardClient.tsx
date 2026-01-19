@@ -110,7 +110,7 @@ export default function DashboardClient() {
         setCurrentPage(1); // Reseta a página ao filtrar
     }, [products]);
 
-    const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setItemsPerPage(Number(e.target.value));
         setCurrentPage(1); // Volta para a primeira página para não quebrar o visual
     };
